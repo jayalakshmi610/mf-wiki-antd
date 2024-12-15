@@ -418,6 +418,7 @@ const SideNav = ({ onItemClick, currentPath }) => {
         height: "100%",
         position: "relative",
         overflow: "hidden",
+        borderInlineEnd: "1px solid rgba(5, 5, 5, 0.06)",
       }}
     >
       {/* Fixed Header */}
@@ -469,6 +470,7 @@ const SideNav = ({ onItemClick, currentPath }) => {
         </div>
         <ConfigProvider theme={{ compact: true }}>
           <Menu
+            className={styles.menu}
             defaultSelectedKeys={["1"]}
             mode="inline"
             items={newNavData.map((item) => ({

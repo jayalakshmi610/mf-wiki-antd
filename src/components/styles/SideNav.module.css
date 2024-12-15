@@ -59,8 +59,9 @@ button.css-1qz0cxr {
   display: flex;
   align-items: center;
   font-size: 14px;
-  border-radius: 5px;
+  /*border-radius: 5px;*/
   border: none;
+  margin: 5px;
 }
 .searchButton {
   border: none;
@@ -75,6 +76,7 @@ button.css-1qz0cxr {
   font-size: 16px;
   width: 100%;
   border-bottom: 1px solid #b0b0b0;
+  border-radius: 0px;
 }
 
 .searchInput::placeholder {
@@ -131,7 +133,9 @@ div.ant-menu-submenu-title {
   left: 0;
   right: 0;
 }
-
+.menu {
+  background-color: transparent;
+}
 .menuItem {
   width: 100%;
   min-width: 0;
@@ -139,7 +143,16 @@ div.ant-menu-submenu-title {
   align-items: center;
   justify-content: space-between;
 }
-
+.css-1x0dypw.ant-menu-light,
+:where(.css-1x0dypw).ant-menu-light > .ant-menu {
+  background-color: transparent;
+}
+.css-1x0dypw.ant-menu-light {
+  background-color: transparent;
+}
+.ant-menu {
+  background-color: transparent;
+}
 .menuItemText {
   min-width: 0;
   overflow: hidden;
