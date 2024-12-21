@@ -8,6 +8,7 @@ import { EditorProvider } from "./components/Blocksuite_editor/EditorProvider";
 
 import EditorContainer from "./components/Blocksuite_editor/EditorContainer";
 import NewPage from "./components/Sidenavbar/NewPage";
+import PageCreator from "./components/Sidenav_icons//PageCreator/PageCreator";
 
 const App = () => {
   console.log("hello world");
@@ -27,6 +28,8 @@ const App = () => {
                   element={<EditorContainer />}
                 />
                 <Route path="*" element={<EditorContainer />} />
+
+                <Route path="/NewPage" element={<NewPage />} />
               </Routes>
             </div>
           </div>

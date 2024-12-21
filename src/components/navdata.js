@@ -257,7 +257,9 @@ const handleAddClick = (sectionId, buttonId, e) => {
   setIsModalOpen(true);
 };
 const SectionActions = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [activeSection, setActiveSection] = useState(null);
 
   const handleAddClick = (e) => {
     e.stopPropagation();
@@ -265,9 +267,51 @@ const SectionActions = () => {
   };
   const [showPageCreator, setShowPageCreator] = useState(false);
   const [showFeatures, setShowFeatures] = useState(false);
-  const handlePageCreatorClick = () => {
-    console.log("PageCreator clicked");
-    setShowFeatures((prev) => !prev);
+  const [newPageName, setNewPageName] = useState("NewPage");
+  const [navData, setNavData] = useState(newNavData);
+
+  const handlePageCreatorClick = (sectionId) => {
+    setActiveSection(sectionId);
+    setNewPageName("NewPage");
+
+    // Attempt to navigate to NewPage
+    const navigateToNewPage = () => {
+      console.log("Navigating to NewPage");
+      navigate("/NewPage");
+    };
+
+    // Fallback to EditorContainer if navigation fails
+    const fallbackToEditorContainer = () => {
+      navigate("/EditorContainer");
+    };
+
+    // Find the section in navData and add a new child
+    const updatedNavData = navData.map((section) => {
+      if (section.key === sectionId && section.children) {
+        return {
+          ...section,
+          children: [
+            ...section.children,
+            {
+              key: `NewPage-${Date.now()}`, // Unique key for the new child
+              label: createLabel("NewPage"),
+              icon: <FaBullhorn size={submenuicon} color="#36B37E" />, // Example icon
+            },
+          ],
+        };
+      }
+      return section;
+    });
+
+    // Update the state with the new navigation data
+    setNavData(updatedNavData);
+
+    // Try to navigate to NewPage, fallback to EditorContainer if needed
+    try {
+      navigateToNewPage();
+    } catch (error) {
+      fallbackToEditorContainer();
+    }
   };
 
   const { currentDocument } = useDocumentStore();
@@ -280,6 +324,8 @@ const SectionActions = () => {
 
   const items = [...moreHorizontalData];
   const itemss = [...newPageData];
+  const [sections, setSections] = useState([]);
+
   return (
     <>
       <span
@@ -291,7 +337,7 @@ const SectionActions = () => {
           gap: "5px",
         }}
       >
-        <div className="flex items-center  gap-1">
+        <div className="flex items-center gap-1">
           <>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <Button
@@ -304,58 +350,29 @@ const SectionActions = () => {
             <Button
               type="text"
               icon={<PageCreator />}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => handlePageCreatorClick("someSectionId")} // Replace with actual section ID
             ></Button>
           </>
-          <Modal
-            title="New Page"
-            open={isModalOpen}
-            onCancel={() => setIsModalOpen(false)}
-            footer={null}
-            width="80%"
-            height="80%"
-          >
-            <NewPage />
-          </Modal>
         </div>
-        {showFeatures && <PageCreator />}
       </span>
-      <div className="pt-14">
-        {currentDocument && (
-          <div className="max-w-5xl mx-auto p-8">
-            {currentDocument.type === "document" && (
-              <div className="min-h-[calc(100vh-8rem)] bg-white rounded-lg shadow-sm p-6">
-                <h1 className="text-3xl font-bold mb-4">
-                  {currentDocument.title}
-                </h1>
-                <div className="prose max-w-none">
-                  {currentDocument.content}
-                </div>
-              </div>
-            )}
-            {currentDocument.type === "table" && (
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h1 className="text-3xl font-bold mb-4">
-                  {currentDocument.title}
-                </h1>
-                <div className="overflow-x-auto">
-                  {/* Table content will be rendered here */}
-                </div>
-              </div>
-            )}
-            {currentDocument.type === "form" && (
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h1 className="text-3xl font-bold mb-4">
-                  {currentDocument.title}
-                </h1>
-                <div className="space-y-6">
-                  {/* Form content will be rendered here */}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      {activeSection && (
+        <div
+          className="submenu"
+          style={{
+            display: "block",
+            marginTop: "10px",
+            padding: "10px",
+            backgroundColor: "#f9f9f9",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+          }}
+        >
+          <h2>{newPageName}</h2>
+          {/* Additional submenu content can go here */}
+        </div>
+      )}
+      <nav className="menu">{renderMenu(sections, activeSection)}</nav>
     </>
   );
 };
@@ -627,3 +644,39 @@ export const newNavData = [
     ],
   },
 ];
+
+const renderMenu = (menuData, activeSection) => {
+  return menuData.map((item) => {
+    if (item.type === "divider") {
+      return <hr key={item.key || Math.random()} />;
+    }
+
+    return (
+      <div key={item.key} className="menu-item">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+            margin: "10px 0",
+          }}
+        >
+          {item.icon}
+          <span>{item.label}</span>
+          {item.key === activeSection && (
+            <Button
+              type="text"
+              icon={<PageCreator />}
+              onClick={() => handlePageCreatorClick(item.key)}
+            />
+          )}
+        </div>
+        {item.children && (
+          <div className="submenu">
+            {renderMenu(item.children, activeSection)}
+          </div>
+        )}
+      </div>
+    );
+  });
+};
