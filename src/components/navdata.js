@@ -33,7 +33,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import PageCreator from "../components/Sidenav_rightsidepluspageicons/PageCreator/PageCreator";
-import NewPage, { newPageData } from "./Sidenavbar/NewPage";
+import NewPage from "./Sidenavbar/NewPage";
 import { MenuDropdown } from "./Sidenav_rightsidepluspageicons/MenuDropdown/MenuDropdown";
 
 import { useDocumentStore } from "./Sidenav_rightsidepluspageicons/store/documentStore";
@@ -323,7 +323,7 @@ const SectionActions = () => {
   };
 
   const items = [...moreHorizontalData];
-  const itemss = [...newPageData];
+  //const itemss = [...NewPage];
   const [sections, setSections] = useState([]);
 
   return (

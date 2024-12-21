@@ -29,6 +29,7 @@ import {
   LinkOutlined,
   PlusOutlined,
   DragOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import styles from "../styles/NewPage.module.css";
 import EditorContainer from "../Blocksuite_editor/EditorContainer";
@@ -37,30 +38,6 @@ import { EditorProvider } from "../Blocksuite_editor/EditorProvider";
 import { moreHorizontalData } from "../../data/Morehorizontaldata";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
-
-// Export the newPageData array
-export const newPageData = [
-  {
-    key: "empty",
-    label: "Empty page",
-    icon: <TableOutlined style={{ fontSize: "16px" }} />,
-  },
-  {
-    key: "table",
-    label: "Table",
-    icon: <TableOutlined style={{ fontSize: "16px" }} />,
-  },
-  {
-    key: "form",
-    label: "Form",
-    icon: <FormOutlined style={{ fontSize: "16px" }} />,
-  },
-  {
-    key: "template",
-    label: "Templates",
-    icon: <AppstoreOutlined style={{ fontSize: "16px" }} />,
-  },
-];
 
 const NewPage = () => {
   const [pageTitle, setPageTitle] = useState("New page");
@@ -167,11 +144,6 @@ const NewPage = () => {
     return <Menu items={shareLinks} />;
   };
 
-  const handleComment = () => {
-    setIsCommentPanelOpen(!isCommentPanelOpen);
-    message.info(`Comments panel ${isCommentPanelOpen ? "closed" : "opened"}`);
-  };
-
   const handleHistory = () => {
     setIsHistoryModalVisible(true);
     // Fetch history data if needed
@@ -221,25 +193,6 @@ const NewPage = () => {
     );
   };
 
-  const handleAddComment = () => {
-    const newComment = {
-      id: uuidv4(),
-      content: "",
-      timestamp: new Date().toISOString(),
-    };
-    setComments([...comments, newComment]);
-  };
-
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-
-    const items = Array.from(comments);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setComments(items);
-  };
-
   return (
     <EditorProvider>
       <div className={styles.newPageContainer} style={{ width: "100%" }}>
@@ -264,13 +217,7 @@ const NewPage = () => {
             >
               <Button icon={<ShareAltOutlined />}>Share</Button>
             </Dropdown>
-            <Tooltip title="Comments">
-              <Button
-                icon={<CommentOutlined />}
-                type="text"
-                onClick={handleComment}
-              />
-            </Tooltip>
+
             <Tooltip title="History">
               <Button
                 icon={<ClockCircleOutlined />}
@@ -286,6 +233,15 @@ const NewPage = () => {
             >
               <Button icon={<MoreOutlined />} type="text" />
             </Dropdown>
+            <Tooltip title="Close">
+              <Button
+                icon={<CloseOutlined />}
+                type="text"
+                onClick={() => {
+                  window.history.back();
+                }}
+              />
+            </Tooltip>
           </div>
         </header>
         <div className={styles.editorContent}>
