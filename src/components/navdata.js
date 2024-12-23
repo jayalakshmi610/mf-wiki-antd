@@ -652,31 +652,48 @@ const renderMenu = (menuData, activeSection) => {
     }
 
     return (
-      <div key={item.key} className="menu-item">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-            margin: "10px 0",
-          }}
+      <Col span={28}>
+        <Collapse
+          activeKey={activeKey} // Dynamically control which panels are open
+          onChange={(keys) => setActiveKey(keys)}
         >
-          {item.icon}
-          <span>{item.label}</span>
-          {item.key === activeSection && (
-            <Button
-              type="text"
-              icon={<PageCreator />}
-              onClick={() => handlePageCreatorClick(item.key)}
-            />
-          )}
-        </div>
-        {item.children && (
-          <div className="submenu">
-            {renderMenu(item.children, activeSection)}
-          </div>
-        )}
-      </div>
+          {sections.map((section) => (
+            <Panel
+              key={section.key}
+              className="collapse-panel"
+              header={
+                <div className="collapse-panel-header">
+                  <span>{section.label}</span>
+                  <Button
+                    type="link"
+                    className="collapse-panel-button"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent Collapse from toggling
+                      addChild(section.key);
+                    }}
+                  >
+                    +
+                  </Button>
+                </div>
+              }
+            >
+              {/* Render Children as Menu Items */}
+              <Menu mode="vertical">
+                {section.children.map((child, index) => (
+                  <Menu.Item
+                    key={`${section.key}-child-${index}`}
+                    onClick={() =>
+                      handleMenuClick(`${child} of ${section.label}`)
+                    }
+                  >
+                    {child}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            </Panel>
+          ))}
+        </Collapse>
+      </Col>
     );
   });
 };

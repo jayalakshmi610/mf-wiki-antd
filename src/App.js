@@ -9,6 +9,7 @@ import { EditorProvider } from "./components/Blocksuite_editor/EditorProvider";
 import EditorContainer from "./components/Blocksuite_editor/EditorContainer";
 import NewPage from "./components/Sidenavbar/NewPage";
 import PageCreator from "./components/Sidenav_icons//PageCreator/PageCreator";
+import Test from "./components/Test";
 
 const App = () => {
   console.log("hello world");
@@ -19,6 +20,7 @@ const App = () => {
         <Router>
           <div className={styles.Container}>
             <div className={styles.contentWrapper}>
+              {/*  <Test />*/}
               <SideNav />
               <Routes>
                 <Route path="/" element={<EditorContainer />} />
