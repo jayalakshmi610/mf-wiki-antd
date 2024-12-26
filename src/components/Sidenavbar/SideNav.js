@@ -69,6 +69,7 @@ const SideNav = ({ onItemClick, currentPath }) => {
   const [recentlyVisited, setRecentlyVisited] = useState([]);
   const MAX_RECENT_ITEMS = 10; // Maximum number of items to store
   const [showRecentlyVisited, setShowRecentlyVisited] = useState(false);
+  const [selectedWorkspace, setSelectedWorkspace] = useState(null);
 
   const handleItemHover = (sectionId) => {
     setHoveredSection(sectionId);
@@ -437,6 +438,18 @@ const SideNav = ({ onItemClick, currentPath }) => {
     navigate(page.path);
   };
 
+  const handleSelect = (key) => {
+    const workspace = workspaces.find((ws) => ws.id === key);
+    setSelectedWorkspace(workspace);
+  };
+
+  const menuItems = workspaces.map((workspace) => ({
+    key: workspace.id,
+    label: (
+      <div onClick={() => handleSelect(workspace.id)}>{workspace.name}</div>
+    ),
+  }));
+
   return (
     <Sider
       width={256}
@@ -457,26 +470,32 @@ const SideNav = ({ onItemClick, currentPath }) => {
               <Space className={styles.titleText}>
                 <Dropdown
                   menu={{
-                    items: workspaces.map((workspace) => ({
-                      key: workspace.id,
-                      label: workspace.name,
-                    })),
+                    items: menuItems,
                   }}
                 >
                   <Button
                     type="text"
                     style={{
                       height: "auto",
-                      fontWeight: "bold",
+                      fontWeight: "normal",
                       display: "flex",
                       alignItems: "center",
                       marginLeft: "0px",
                     }}
                   >
-                    <span className={styles.titleText}>Jayalakshmi</span>
+                    {selectedWorkspace ? (
+                      <div>
+                        <h4>{selectedWorkspace.name}</h4>
+                      </div>
+                    ) : (
+                      <div>
+                        <h4>My Workspace</h4>
+                      </div>
+                    )}
                     <DownOutlined style={{ marginLeft: "18px" }} />
                   </Button>
                 </Dropdown>
+
                 <Dropdown menu={{ items: handleMore() }} trigger={["click"]}>
                   <Button icon={<MoreOutlined />} type="text" />
                 </Dropdown>
