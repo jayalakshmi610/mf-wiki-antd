@@ -34,12 +34,13 @@ import { NavdataBottom, NavDatatop, newNavData } from "../navdata";
 import workspaces from "../../data/workspaces";
 import AddPageModal from "../../components/AddPageModal";
 import { useNavigate } from "react-router-dom";
-import { MenuDropdown } from "../Sidenav_rightsidepluspageicons/MenuDropdown/MenuDropdown";
-import PageCreator from "../../components/Sidenav_rightsidepluspageicons/PageCreator/PageCreator";
-import { useDocumentStore } from "../Sidenav_rightsidepluspageicons/store/documentStore";
+import { MenuDropdown } from "../Sidenav_icons/MenuDropdown/MenuDropdown";
+import PageCreator from "../../components/Sidenav_icons/PageCreator/PageCreator";
+import { useDocumentStore } from "../Sidenav_icons/store/documentStore";
 import toast from "react-hot-toast";
 import Calendar from "../Sidenavbar/Calendar";
 import RecentlyVisited from "../Sidenavbar/RecentlyVisited";
+import { useNavData } from "./Navdataprovider";
 const { Sider } = Layout;
 
 const SideNav = ({ onItemClick, currentPath }) => {
@@ -71,6 +72,32 @@ const SideNav = ({ onItemClick, currentPath }) => {
 
   const handleItemHover = (sectionId) => {
     setHoveredSection(sectionId);
+  };
+
+  const { navData, setNavData } = useNavData();
+
+  const updateChildren = (children, id) => {
+    return children.map((child) => {
+      if (child.key === id) {
+        return {
+          ...child,
+          children: [
+            ...(child.children || []),
+            {
+              key: `Page${child.children?.length + 1 || 1}`,
+              label: createLabel(`Page ${child.children?.length + 1 || 1}`),
+              icon: <FaFileAlt size={submenuicon} color="#FFAB00" />,
+            },
+          ],
+        };
+      } else if (child.children) {
+        return {
+          ...child,
+          children: updateChildren(child.children, id),
+        };
+      }
+      return child;
+    });
   };
 
   const handleItemLeave = () => {
@@ -178,7 +205,7 @@ const SideNav = ({ onItemClick, currentPath }) => {
             }}
           >
             <MenuDropdown style={{ fontSize: "10px" }} />
-            <PageCreator style={{ fontSize: "10px" }} />
+            <PageCreator style={{ fontSize: "10px", color: "red" }} />
           </div>
         </div>
       ),
@@ -468,12 +495,13 @@ const SideNav = ({ onItemClick, currentPath }) => {
             aria-label="Search"
           />
         </div>
+
         <ConfigProvider theme={{ compact: true }}>
           <Menu
             className={styles.menu}
             defaultSelectedKeys={["1"]}
             mode="inline"
-            items={newNavData.map((item) => ({
+            items={navData.map((item) => ({
               ...item,
               label: (
                 <div

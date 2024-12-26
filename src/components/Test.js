@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import { Collapse, Row, Col, Button, Menu } from "antd";
 import "./Test.css"; // Import the CSS file for styling
+import { newNavData } from "./navdata";
 
 const { Panel } = Collapse;
 
+// Function to transform newNavData into sections format
+const transformNavDataToSections = (navData) => {
+  return navData
+    .filter((item) => !item.type) // Exclude dividers
+    .map((item, index) => ({
+      id: index + 1, // Generate a unique ID
+      title: item.label, // Use the label as the title
+      children: item.children
+        ? item.children.map((child) => child.label) // Map child labels to children array
+        : [],
+    }));
+};
+
 const Test = () => {
-  const [sections, setSections] = useState([
-    { id: 1, title: "Section 1", children: [] },
-    { id: 2, title: "Section 23", children: [] },
-  ]);
+  const [sections, setSections] = useState(
+    transformNavDataToSections(newNavData)
+  );
   const [activeKey, setActiveKey] = useState([]); // Keeps track of open panels
   const [selectedPage, setSelectedPage] = useState(null); // Active Pagefor details
 

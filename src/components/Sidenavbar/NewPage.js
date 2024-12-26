@@ -32,8 +32,8 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import styles from "../styles/NewPage.module.css";
-import EditorContainer from "../Blocksuite_editor/EditorContainer";
-import { EditorProvider } from "../Blocksuite_editor/EditorProvider";
+import EditorContainer from "../BlocksuiteEditor/EditorContainer";
+import { EditorProvider } from "../BlocksuiteEditor/EditorProvider";
 
 import { moreHorizontalData } from "../../data/Morehorizontaldata";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -211,7 +211,7 @@ const NewPage = () => {
 
           <div className={styles.rightSection}>
             <Dropdown
-              overlay={handleShare()}
+              menu={handleShare()}
               trigger={["click"]}
               getPopupContainer={(triggerNode) => triggerNode.parentNode}
             >

@@ -29,16 +29,19 @@ import {
   FaMedkit,
   FaPlus,
   FaStar,
+  FaFileAlt,
 } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
-import PageCreator from "../components/Sidenav_rightsidepluspageicons/PageCreator/PageCreator";
+import PageCreator from "../components/Sidenav_icons/PageCreator/PageCreator";
 import NewPage from "./Sidenavbar/NewPage";
-import { MenuDropdown } from "./Sidenav_rightsidepluspageicons/MenuDropdown/MenuDropdown";
+import { MenuDropdown } from "./Sidenav_icons/MenuDropdown/MenuDropdown";
 
-import { useDocumentStore } from "./Sidenav_rightsidepluspageicons/store/documentStore";
-import { MoreHorizontal } from "lucide-react";
+import { useDocumentStore } from "./Sidenav_icons/store/documentStore";
+import { Home, MoreHorizontal } from "lucide-react";
 import { moreHorizontalData } from "../data/Morehorizontaldata";
+import { addChild } from "./Sidenavbar/SideNav";
+import { useNavData } from "./Sidenavbar/Navdataprovider";
 
 // Define sizes for the icons
 const iconsize = 15; // Default size for main navigation icons
@@ -145,11 +148,6 @@ export const NavdataBottom = [
         icon: <FaGraduationCap size={submenuicon} color="#36B37E" />,
         path: "/human-resources/training",
       },
-      {
-        name: "Benefits",
-        icon: <FaMedkit size={submenuicon} color="#00B8D9" />,
-        path: "/human-resources/benefits",
-      },
     ],
   },
   {
@@ -157,11 +155,6 @@ export const NavdataBottom = [
     icon: <FaBriefcase size={iconsize} color="#6554C0" />,
     path: "/general",
     submenu: [
-      {
-        name: "Company home",
-        icon: <FaHome size={submenuicon} color="#FF5630" />,
-        path: "/general/company-home",
-      },
       {
         name: "The Handbook",
         icon: <FaComments size={submenuicon} color="#36B37E" />,
@@ -256,7 +249,7 @@ const handleAddClick = (sectionId, buttonId, e) => {
   setSelectedSection({ sectionId, buttonId });
   setIsModalOpen(true);
 };
-const SectionActions = () => {
+const SectionActions = (id) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [activeSection, setActiveSection] = useState(null);
@@ -268,14 +261,14 @@ const SectionActions = () => {
   const [showPageCreator, setShowPageCreator] = useState(false);
   const [showFeatures, setShowFeatures] = useState(false);
   const [newPageName, setNewPageName] = useState("NewPage");
-  const [navData, setNavData] = useState(newNavData);
+  const { navData, setNavData } = useNavData();
 
   const handlePageCreatorClick = (sectionId) => {
     setActiveSection(sectionId);
     setNewPageName("NewPage");
 
     // Attempt to navigate to NewPage
-    const navigateToNewPage = () => {
+    const navigateToNewPage = (sectionId) => {
       console.log("Navigating to NewPage");
       navigate("/NewPage");
     };
@@ -284,6 +277,63 @@ const SectionActions = () => {
     const fallbackToEditorContainer = () => {
       navigate("/EditorContainer");
     };
+    const addChild = (sectionId) => {
+      setNavData((prevNavData) =>
+        prevNavData.map((item) => {
+          //console.log(item);
+          console.log(sectionId.id);
+
+          if (item.key === sectionId.id) {
+            // Initialize `children` as an array if it's undefined
+            const children = item.children || [];
+            return {
+              ...item,
+              children: [
+                ...children,
+                {
+                  key: `Page${children.length + 1}`,
+                  label: createLabel(`Page ${children.length + 1}`),
+                  icon: <FaFileAlt size={submenuicon} color="#FFAB00" />,
+                },
+              ],
+            };
+          } else if (item.children) {
+            // Recursively process children
+            return {
+              ...item,
+              children: updateChildren(item.children || [], sectionId.id),
+            };
+          }
+          return item;
+        })
+      );
+    };
+    addChild(sectionId);
+
+    const updateChildren = (children = [], sectionId) =>
+      children.map((child) => {
+        if (child.key === sectionId) {
+          const childChildren = child.children || [];
+          return {
+            ...child,
+            children: [
+              ...childChildren,
+              {
+                key: `Page${childChildren.length + 1}`,
+                label: createLabel(`Page ${childChildren.length + 1}`),
+
+                icon: <FaFileAlt size={submenuicon} color="#FFAB00" />,
+              },
+            ],
+          };
+        } else if (child.children) {
+          return {
+            ...child,
+            children: updateChildren(child.children || [], sectionId),
+          };
+        }
+        return child;
+      });
 
     // Find the section in navData and add a new child
     const updatedNavData = navData.map((section) => {
@@ -304,7 +354,6 @@ const SectionActions = () => {
     });
 
     // Update the state with the new navigation data
-    setNavData(updatedNavData);
 
     // Try to navigate to NewPage, fallback to EditorContainer if needed
     try {
@@ -324,7 +373,6 @@ const SectionActions = () => {
 
   const items = [...moreHorizontalData];
   //const itemss = [...NewPage];
-  const [sections, setSections] = useState([]);
 
   return (
     <>
@@ -349,30 +397,13 @@ const SectionActions = () => {
             </Dropdown>
             <Button
               type="text"
+              style={{ color: "red" }}
               icon={<PageCreator />}
-              onClick={() => handlePageCreatorClick("someSectionId")} // Replace with actual section ID
+              onClick={() => handlePageCreatorClick(id)}
             ></Button>
           </>
         </div>
       </span>
-      {activeSection && (
-        <div
-          className="submenu"
-          style={{
-            display: "block",
-            marginTop: "10px",
-            padding: "10px",
-            backgroundColor: "#f9f9f9",
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <h2>{newPageName}</h2>
-          {/* Additional submenu content can go here */}
-        </div>
-      )}
-      <nav className="menu">{renderMenu(sections, activeSection)}</nav>
     </>
   );
 };
@@ -400,7 +431,7 @@ const createLabel = (text) => (
       {text}
     </span>
 
-    <SectionActions />
+    <SectionActions id={text} />
   </div>
 );
 
@@ -515,11 +546,6 @@ export const newNavData = [
             label: createLabel("Training"),
             icon: <FaGraduationCap size={submenuicon} color="#36B37E" />,
           },
-          {
-            key: "Benefits",
-            label: createLabel("Benefits"),
-            icon: <FaMedkit size={submenuicon} color="#00B8D9" />,
-          },
         ],
       },
       {
@@ -527,11 +553,6 @@ export const newNavData = [
         label: createLabel("General"),
         icon: <FaBriefcase size={iconsize} color="#6554C0" />,
         children: [
-          {
-            key: "Company home",
-            label: createLabel("Company home"),
-            icon: <FaHome size={submenuicon} color="#FF5630" />,
-          },
           {
             key: "The Handbook",
             label: createLabel("The Handbook"),
@@ -564,11 +585,7 @@ export const newNavData = [
             label: createLabel("Campaigns"),
             icon: <FaBullhorn size={submenuicon} color="#00B8D9" />,
           },
-          {
-            key: "Analytics",
-            label: createLabel("Analytics"),
-            icon: <FaChartLine size={submenuicon} color="#FFAB00" />,
-          },
+
           {
             key: "Social Media",
             label: createLabel("Social Media"),
@@ -644,56 +661,3 @@ export const newNavData = [
     ],
   },
 ];
-
-const renderMenu = (menuData, activeSection) => {
-  return menuData.map((item) => {
-    if (item.type === "divider") {
-      return <hr key={item.key || Math.random()} />;
-    }
-
-    return (
-      <Col span={28}>
-        <Collapse
-          activeKey={activeKey} // Dynamically control which panels are open
-          onChange={(keys) => setActiveKey(keys)}
-        >
-          {sections.map((section) => (
-            <Panel
-              key={section.key}
-              className="collapse-panel"
-              header={
-                <div className="collapse-panel-header">
-                  <span>{section.label}</span>
-                  <Button
-                    type="link"
-                    className="collapse-panel-button"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent Collapse from toggling
-                      addChild(section.key);
-                    }}
-                  >
-                    +
-                  </Button>
-                </div>
-              }
-            >
-              {/* Render Children as Menu Items */}
-              <Menu mode="vertical">
-                {section.children.map((child, index) => (
-                  <Menu.Item
-                    key={`${section.key}-child-${index}`}
-                    onClick={() =>
-                      handleMenuClick(`${child} of ${section.label}`)
-                    }
-                  >
-                    {child}
-                  </Menu.Item>
-                ))}
-              </Menu>
-            </Panel>
-          ))}
-        </Collapse>
-      </Col>
-    );
-  });
-};
