@@ -476,11 +476,14 @@ const SideNav = ({ onItemClick, currentPath }) => {
                   <Button
                     type="text"
                     style={{
+                      width: "200px",
                       height: "auto",
                       fontWeight: "normal",
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       marginLeft: "0px",
+                      paddingLeft: "0px",
                     }}
                   >
                     {selectedWorkspace ? (
@@ -492,12 +495,19 @@ const SideNav = ({ onItemClick, currentPath }) => {
                         <h4>My Workspace</h4>
                       </div>
                     )}
-                    <DownOutlined style={{ marginLeft: "18px" }} />
+                    <DownOutlined
+                      style={{
+                        color: "rgb(114, 19, 146)",
+                      }}
+                    />
                   </Button>
                 </Dropdown>
 
                 <Dropdown menu={{ items: handleMore() }} trigger={["click"]}>
-                  <Button icon={<MoreOutlined />} type="text" />
+                  <Button
+                    icon={<MoreOutlined style={{ color: "#8230ff" }} />}
+                    type="text"
+                  />
                 </Dropdown>
               </Space>
             </div>
@@ -509,7 +519,11 @@ const SideNav = ({ onItemClick, currentPath }) => {
           <Input
             placeholder="Search"
             className={styles.searchInput}
-            style={{ outline: "none", fontSize: "14px" }}
+            style={{
+              outline: "none",
+              fontSize: "14px",
+              color: "#8230ff",
+            }}
             prefix={<SearchOutlined />}
             aria-label="Search"
           />

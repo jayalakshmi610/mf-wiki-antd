@@ -55,7 +55,7 @@ const duplicatePage = async () => {
   }
 };
 
-const handleRename = async (oldName) => {
+const handleRename = async (oldName, sectionId) => {
   const [newName, setNewName] = useState("");
 
   Modal.confirm({
@@ -71,6 +71,8 @@ const handleRename = async (oldName) => {
         message.error("New name cannot be empty");
         return;
       }
+      // Here you would typically update the section's name in your state or API
+      // await updateSectionName(sectionId, newName); // Example function to update the name
       message.success(`Page renamed to "${newName}"`);
     },
   });

@@ -22,6 +22,7 @@
 }
 
 .titleBar {
+  width: 255px;
   justify-content: space-between;
   align-items: center;
 }
@@ -29,9 +30,9 @@
 .titleText {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   text-align: left;
-  font-size: 18px;
+  font-size: 12px;
   font-weight: bold;
 }
 button.css-1qz0cxr {
@@ -72,15 +73,15 @@ button.css-1qz0cxr {
   border: none;
   outline: none;
   background: transparent;
-  color: #b0b0b0; /* Placeholder color */
+  color: #8230ff; /* Placeholder color */
   font-size: 16px;
   width: 100%;
-  border-bottom: 1px solid #b0b0b0;
+  border-bottom: 1px solid #8230ff;
   border-radius: 0px;
 }
 
 .searchInput::placeholder {
-  color: #b0b0b0; /* Placeholder color */
+  color: #8230ff; /* Placeholder color */
   font-weight: bold;
   font-size: 16px;
 }
