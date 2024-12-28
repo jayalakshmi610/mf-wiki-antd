@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Dropdown, message, Modal, Space } from "antd";
 import React, { useState } from "react";
+import styles from "./styles/navdata.module.css";
 
 import {
   FaHome,
@@ -46,8 +47,15 @@ import { useNavData } from "./Sidenavbar/Navdataprovider";
 // Define sizes for the icons
 const iconsize = 15; // Default size for main navigation icons
 const submenuicon = 15; // Size for submenu icons
+
 // Define styles for submenu items
-const submenuStyle = { marginLeft: "0px", paddingLeft: "0px" }; // Dynamic style for submenu items
+const submenuStyle = {
+  padding: "10px",
+  backgroundColor: "#f0f0f0", // Example background color
+  borderRadius: "4px", // Example border radius
+  // Add any other styles you need
+};
+
 // Define the top-level navigation items
 export const NavDatatop = [
   {
@@ -384,15 +392,17 @@ const SectionActions = (id) => {
           right: "5px",
           gap: "5px",
         }}
+        className={styles.labelContainer}
       >
         <div className="flex items-center gap-1">
           <>
             <Dropdown menu={{ items }} trigger={["click"]}>
               <Button
                 icon={
-                  <MoreHorizontal className="w-4 h-4 d-flex text-center text-gray-400" />
+                  <MoreHorizontal className="w-4 h-4 d-flex text-center hover:bg-gray-100 text-gray-500" />
                 }
                 type="text"
+                style={{ zIndex: 1, background: "whitesmoke" }}
               ></Button>
             </Dropdown>
             <Button
@@ -402,13 +412,25 @@ const SectionActions = (id) => {
               onClick={() => handlePageCreatorClick(id)}
             ></Button>
           </>
+          {/* Section actions are now only visible when parent is hovered */}
+          <div className={styles.sectionActions} style={{ display: "none" }}>
+            {/* Or any other component you want to render */}
+          </div>
         </div>
       </span>
+      {/* Add hover effect to show section actions */}
+      <style jsx>{`
+        .${styles.labelContainer} {
+          position: relative; // Ensure the hover effect works correctly
+        }
+        .${styles.labelContainer}:hover .${styles.sectionActions} {
+          display: block; // Show section actions on hover
+        }
+      `}</style>
     </>
   );
 };
 
-// Function to create a label with actions
 const createLabel = (text) => (
   <div
     style={{

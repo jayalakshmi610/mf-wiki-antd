@@ -331,3 +331,7 @@ li.ant-menu-submenu.ant-menu-submenu-inline {
   margin-right: 0px;
   padding: 0px;
 }
+
+.workspaceTitle:hover .workspaceName {
+  color: #8230ff; /* Change font color on hover */
+}

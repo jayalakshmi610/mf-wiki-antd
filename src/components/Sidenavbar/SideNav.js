@@ -486,15 +486,19 @@ const SideNav = ({ onItemClick, currentPath }) => {
                       paddingLeft: "0px",
                     }}
                   >
-                    {selectedWorkspace ? (
-                      <div>
-                        <h4>{selectedWorkspace.name}</h4>
-                      </div>
-                    ) : (
-                      <div>
-                        <h4>My Workspace</h4>
-                      </div>
-                    )}
+                    <div className={styles.workspaceTitle}>
+                      {selectedWorkspace ? (
+                        <div>
+                          <h4 className={styles.workspaceName}>
+                            {selectedWorkspace.name}
+                          </h4>
+                        </div>
+                      ) : (
+                        <div>
+                          <h4 className={styles.workspaceName}>My Workspace</h4>
+                        </div>
+                      )}
+                    </div>
                     <DownOutlined
                       style={{
                         color: "rgb(114, 19, 146)",
@@ -521,7 +525,7 @@ const SideNav = ({ onItemClick, currentPath }) => {
             className={styles.searchInput}
             style={{
               outline: "none",
-              fontSize: "14px",
+              fontSize: "12px",
               color: "#8230ff",
             }}
             prefix={<SearchOutlined />}

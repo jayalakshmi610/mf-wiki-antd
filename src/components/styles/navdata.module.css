@@ -1,0 +1,12 @@
+.labelContainer {
+  visibility: visible; /* Initially hidden */
+  /* Prevent interaction when hidden */
+  opacity: 0; /* Fade in effect */
+  /* Added for testing */
+}
+
+.labelContainer:hover {
+  visibility: visible; /* Visible when hovered */
+  /* Allow interaction when visible */
+  opacity: 1;
+}
