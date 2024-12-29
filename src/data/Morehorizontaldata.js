@@ -12,6 +12,7 @@ import {
 } from "@ant-design/icons";
 import { Modal, Input, Select, message } from "antd";
 import { createRoot } from "react-dom/client";
+import EditorContainer from "../components/BlocksuiteEditor/EditorContainer";
 
 //import { on } from "@blocksuite/blocks";
 

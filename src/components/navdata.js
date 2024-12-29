@@ -407,7 +407,7 @@ const SectionActions = (id) => {
             </Dropdown>
             <Button
               type="text"
-              style={{ color: "red" }}
+              style={{ background: "whitesmoke" }}
               icon={<PageCreator />}
               onClick={() => handlePageCreatorClick(id)}
             ></Button>
